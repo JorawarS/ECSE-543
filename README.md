@@ -1,2 +1,2 @@
 # ECSE-543
-https://cran.rstudio.com/bin/windows/Rtools/
+Assignments for ECSE 543: NUMERICAL METHODS IN ELECTRICAL ENGINEERING (Fall 2019)
