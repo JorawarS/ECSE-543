@@ -1,0 +1,39 @@
+ function x = Cholesky_sparse(A,b,hbw)%Function to solve Ax=b using Choleski algorithm using bandwidth
+hbw=hbw-1;
+[n,m]=size(A);
+%Check whether input matrix is a square matrix
+if n~=m
+    x=nan;
+    disp('not a square matrix');
+    return  
+end  
+
+%to overwrite A by L and b by y
+for j=1:n
+    if A(j,j)<=0
+        disp('not a positive definite matrix');
+        x=nan;
+        return
+    end
+    A(j,j)=sqrt(A(j,j));
+    b(j,1)=b(j,1)/A(j,j);
+    for i= j+1:min(n,(j+hbw))%minimising number of operations
+        A(i,j)=A(i,j)/A(j,j);
+        b(i)= b(i)-A(i,j)*b(j);
+        for k=j+1:i
+            A(i,k)=A(i,k)-A(i,j)*A(k,j);
+        end
+    end
+end
+U=mat_trans(A);
+
+for i=n:-1:1%OPTIMISED BACKWARD ELIMINATION(solve Ux=y for x)
+        temp_sum=0;
+        for j=(min(n,i+hbw)):-1:i+1
+            temp_sum = temp_sum + U(i,j)*x(j,1);
+        end
+        x(i,1) = (b(i,1)-temp_sum)/U(i,i);   
+
+end       
+end
+
